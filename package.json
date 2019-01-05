@@ -1,0 +1,18 @@
+{
+  "name": "top_hits",
+  "version": "1.0.0",
+  "description": "App that texts you the top hits on spotify",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babyparse": "^0.4.6",
+    "node-schedule": "^1.3.1",
+    "papaparse": "^4.6.2",
+    "request": "^2.88.0",
+    "twilio": "^3.26.1"
+  }
+}
