@@ -1,8 +1,11 @@
 const request = require('request');
 const schedule = require('node-schedule');
-const express = require('express')
+const express = require('express');
 
-const app = express()
+const app = express();
+
+app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 
 const url = 'https://spotifycharts.com/regional/global/daily/latest/download';
 const accountSid = 'ACdc626fff9d55bf547dcd99095a4b7ae8';
