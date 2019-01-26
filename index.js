@@ -8,10 +8,10 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
 const url = 'https://spotifycharts.com/regional/global/daily/latest/download';
-const accountSid = 'ACdc626fff9d55bf547dcd99095a4b7ae8';
-const authToken = '544266f66c7d0ff18f54433edd9a0e49';
-const sender = '+15625014703';
-const numbersToMessage = ['+17149303482', '+17145887294', '+17144780423']; // Array of Recipients
+const accountSid = 'ENTER ACCOUNT SID HERE';
+const authToken = 'ENTER AUTH TOKEN HERE';
+const sender = 'ENTER TWILIO NUMBER HERE';
+const numbersToMessage = []; // Array of Recipients
 const client = require('twilio')(accountSid, authToken);
 
 app.get('/', function(req, res) {
