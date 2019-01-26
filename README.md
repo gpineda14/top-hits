@@ -1,6 +1,6 @@
-# Top 10 Hits Messenger #
+# Top Hits Informer #
 
-**I love to listen to music and I also keeping up to date with the latest music. I created a Node.js application that will fetch data from Spotify Charts. After the app fetches the information, it parses the data and retrieves the top ten songs. Using Twilio's SMS API, the app then sends a text message containing the top 10 hits to the recipients.**
+**I love to listen to music and I also like keeping up to date with the latest music. I created a Node.js application that will fetch data from Spotify Charts. After the app fetches the information, it parses the data and retrieves the top ten songs. Using Twilio's SMS API, the app then sends a text message containing the top 10 hits to the recipients.**
 
 ## To run the app ##
 
