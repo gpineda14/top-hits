@@ -19,7 +19,9 @@ app.get('/', function(req, res) {
 })
 
 app.post('/submit', function (req, res) {
-
+  const name = req.body.name;
+  const phoneNum = req.body.phoneNum;
+  const schedule = req.body.schedule;
 })
 
 let job = schedule.scheduleJob('* 21 * * *', function(){
