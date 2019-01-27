@@ -1,6 +1,7 @@
 const request = require('request');
 const schedule = require('node-schedule');
 const express = require('express');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
@@ -21,12 +22,12 @@ app.get('/', function(req, res) {
 app.post('/submit', function (req, res) {
   const name = req.body.name;
   const phoneNum = req.body.phoneNum;
-  const schedule = req.body.schedule;
-  const hour = getTime(schedule) + 1;
-  const rule =  new schedule.RecurrenceRule();
-  rule.hour = hour;
+  const occurrenceSetting = req.body.schedule;
+  const rule = new schedule.RecurrenceRule();
+  rule.hour = getTime(occurrenceSetting) + 1;
   rule.dayOfWeek = [0, 6];
   createJob(rule, phoneNum);
+  console.log(`Job Scheduled for ` + rule.hour);
 })
 
 function createJob(rule, phoneNum) {
@@ -42,7 +43,7 @@ function createJob(rule, phoneNum) {
         sendTextMessage(msg, phoneNum);
       }
     })
-  }
+  })
 }
 
 function parseCSV(csv) {
@@ -80,7 +81,9 @@ function sendTextMessage(msg, phoneNum) {
 }
 
 function getTime(setting) {
-  if setting === 'daily' {
+  if (setting === 'daily') {
     return (new Date().getHours());
   }
 }
+
+app.listen(4000);
