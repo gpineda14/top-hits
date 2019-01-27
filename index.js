@@ -1,17 +1,17 @@
 const request = require('request');
 const schedule = require('node-schedule');
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
-const url = 'https://spotifycharts.com/regional/global/daily/latest/download';
-const accountSid = 'ENTER ACCOUNT SID HERE';
-const authToken = 'ENTER AUTH TOKEN HERE';
-const sender = 'ENTER TWILIO NUMBER HERE';
-const numbersToMessage = []; // Array of Recipients
+const url = process.env.URL;
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const sender = process.env.SENDER;
 const client = require('twilio')(accountSid, authToken);
 
 app.get('/', function(req, res) {
@@ -22,21 +22,28 @@ app.post('/submit', function (req, res) {
   const name = req.body.name;
   const phoneNum = req.body.phoneNum;
   const schedule = req.body.schedule;
+  const hour = getTime(schedule) + 1;
+  const rule =  new schedule.RecurrenceRule();
+  rule.hour = hour;
+  rule.dayOfWeek = [0, 6];
+  createJob(rule, phoneNum);
 })
 
-let job = schedule.scheduleJob('* 21 * * *', function(){
-  request(url, function(err, response, body) {
-    if (err) {
-      console.log('error:', err);
-    }
-    else {
-      let csv = body;
-      let hits = parseCSV(csv)
-      let msg = orderInfoToText(hits);
-      sendTextMessage(msg);
-    }
-  })
-});
+function createJob(rule, phoneNum) {
+  schedule.scheduleJob(rule, function(){
+    request(url, function(err, response, body) {
+      if (err) {
+        console.log('error:', err);
+      }
+      else {
+        let csv = body;
+        let hits = parseCSV(csv)
+        let msg = orderInfoToText(hits);
+        sendTextMessage(msg, phoneNum);
+      }
+    })
+  }
+}
 
 function parseCSV(csv) {
   // console.log(csv);
@@ -61,15 +68,19 @@ function orderInfoToText(arr) {
   return msg;
 }
 
-function sendTextMessage(msg) {
-  numbersToMessage.forEach(function (number) {
-    let messages = client.messages
+function sendTextMessage(msg, phoneNum) {
+  client.messages
     .create({
       body: msg,
       from: sender,
-      to: number
+      to: phoneNum
     })
-    .then(message => console.log(message.sid))
+    .then(message => console.log(messsage.sid))
     .done();
-  });
+}
+
+function getTime(setting) {
+  if setting === 'daily' {
+    return (new Date().getHours());
+  }
 }
