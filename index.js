@@ -20,29 +20,34 @@ app.get('/', function(req, res) {
 })
 
 app.post('/submit', function (req, res) {
-  const name = req.body.name;
-  const phoneNum = req.body.phoneNum;
-  const occurrenceSetting = req.body.schedule;
-  const rule = new schedule.RecurrenceRule();
-  rule.hour = getTime(occurrenceSetting) + 1;
-  rule.dayOfWeek = [0, 6];
+  let name = req.query.name;
+  let phoneNum = req.query.phoneNum;
+  let occurrenceSetting = req.query.schedule;
+  let rule = new schedule.RecurrenceRule();
+  rule.minute = new Date().getMinutes() + 1
+  rule.dayOfWeek = new schedule.Range(0, 6);
   createJob(rule, phoneNum);
-  console.log(`Job Scheduled for ` + rule.hour);
+  console.log(`Job Scheduled for ` + rule);
 })
 
 function createJob(rule, phoneNum) {
-  schedule.scheduleJob(rule, function(){
-    request(url, function(err, response, body) {
-      if (err) {
-        console.log('error:', err);
-      }
-      else {
-        let csv = body;
-        let hits = parseCSV(csv)
-        let msg = orderInfoToText(hits);
-        sendTextMessage(msg, phoneNum);
-      }
-    })
+  schedule.scheduleJob(rule, function() {
+    fetchAndSend(phoneNum);
+  });
+}
+
+function fetchAndSend(phoneNum) {
+  request(url, function(err, response, body) {
+    if (err) {
+      console.log('error: ', err);
+    }
+    else {
+      // console.log(phoneNum);
+      let csv = body;
+      let hits = parseCSV(csv)
+      let msg = orderInfoToText(hits);
+      sendTextMessage(msg, phoneNum);
+    }
   })
 }
 
@@ -70,19 +75,18 @@ function orderInfoToText(arr) {
 }
 
 function sendTextMessage(msg, phoneNum) {
-  client.messages
-    .create({
-      body: msg,
-      from: sender,
-      to: phoneNum
-    })
-    .then(message => console.log(messsage.sid))
-    .done();
+  client.messages.create({
+    body: msg,
+    from: sender,
+    to: phoneNum,
+  })
+  .then(message => console.log(message.sid))
+  .done();
 }
 
 function getTime(setting) {
   if (setting === 'daily') {
-    return (new Date().getHours());
+    return new Date().getHours();
   }
 }
 
