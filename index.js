@@ -22,10 +22,9 @@ app.get('/', function(req, res) {
 app.post('/submit', function (req, res) {
   let name = req.query.name;
   let phoneNum = req.query.phoneNum;
-  let occurrenceSetting = req.query.schedule;
+  let frequency = req.query.frequency;
   let rule = new schedule.RecurrenceRule();
-  rule.minute = new Date().getMinutes() + 1
-  rule.dayOfWeek = new schedule.Range(0, 6);
+  setFrequency(rule, frequency);
   createJob(rule, phoneNum);
   console.log(`Job Scheduled for ` + rule);
 })
@@ -84,9 +83,17 @@ function sendTextMessage(msg, phoneNum) {
   .done();
 }
 
-function getTime(setting) {
-  if (setting === 'daily') {
-    return new Date().getHours();
+function setFrequency(rule, setting) {
+  let date = new Date();
+  rule.hour = date.getHours() + 1;
+  if (setting == 'weekly') {
+    rule.dayOfWeek = [date.getDay()];
+  }
+  else if (setting == 'monthly') {
+    rule.date = date.getMonth();
+  }
+  else {
+    rule.dayOfWeek = new schedule.Range(0, 6);
   }
 }
 
