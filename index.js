@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const url = process.env.URL;
 const accountSid = process.env.ACCOUNT_SID;
-const authToken = process.env.AUTH_TOKEN;
+const authToken = process.env.AUTH_TOKEN_TWILIO;
 const sender = process.env.SENDER;
 const client = require('twilio')(accountSid, authToken);
 
