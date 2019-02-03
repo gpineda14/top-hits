@@ -2,7 +2,7 @@ const request = require('request');
 const schedule = require('node-schedule');
 const express = require('express');
 const bodyParser = require('body-parser');
-const spotifyAPI = require('./lib/spotify');
+const dataHandler = require('./lib/dataHandler');
 require('dotenv').config();
 
 const app = express();
