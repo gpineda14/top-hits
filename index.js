@@ -2,6 +2,7 @@ const request = require('request');
 const schedule = require('node-schedule');
 const express = require('express');
 const bodyParser = require('body-parser');
+const spotifyAPI = require('./lib/spotify');
 require('dotenv').config();
 
 const app = express();
@@ -36,30 +37,22 @@ function createJob(rule, phoneNum) {
 }
 
 function fetchAndSend(phoneNum) {
-  request(url, function(err, response, body) {
-    if (err) {
-      console.log('error: ', err);
-    }
-    else {
-      // console.log(phoneNum);
-      let csv = body;
-      let hits = parseCSV(csv)
-      let msg = orderInfoToText(hits);
-      sendTextMessage(msg, phoneNum);
-    }
-  })
-}
-
-function parseCSV(csv) {
-  // console.log(csv);
-  let arr = csv.split("\n");
-  let songs = []
-  for (let i = 2; i < 12; i++) {
-    let curr = arr[i].split(',');
-    let song = {'Artist': curr[2], 'Track Name': curr[1], 'URL': curr[4]};
-    songs.push(song);
-  }
-  return songs
+  // request(url, function(err, response, body) {
+  //   if (err) {
+  //     console.log('error: ', err);
+  //   }
+  //   else {
+  //     // console.log(phoneNum);
+  //     let csv = body;
+  //     let hits = parseCSV(csv)
+  //     let msg = orderInfoToText(hits);
+  //     sendTextMessage(msg, phoneNum);
+  //   }
+  // })
+  let json_data = spotifyAPI.requestTopHits();
+  console.log(json_data);
+  let msg = orderInfoToText(json_data);
+  sendTextMessage(msg, phoneNum);
 }
 
 function orderInfoToText(arr) {
@@ -85,7 +78,7 @@ function sendTextMessage(msg, phoneNum) {
 
 function setFrequency(rule, setting) {
   let date = new Date();
-  rule.hour = date.getHours() + 1;
+  rule.minute = date.getMinutes() + 1;
   if (setting == 'weekly') {
     rule.dayOfWeek = [date.getDay()];
   }
