@@ -12,14 +12,7 @@ After gathering data, the server ranks the tracks by frequency and chart positio
 
 ## Installation ##
 
-### The API runs on Node.js and uses the following dependencies: ###
-
-1. Twilio (for sending SMS)
-2. Cheerio (for web scraping)
-3. Puppeteer (for web scraping sites render via Javascript)
-4. dotenv (to store client keys and secrets)
-5. node-schedule (to schedule text message)
-6. request (to retrieve data from api and html)
+The API runs on Node.js and uses the following dependencies: Twilio (for sending SMS), Cheerio (for web scraping), Puppeteer (for web scraping sites render via Javascript), dotenv (to store client keys and secrets), node-schedule (to schedule text message), request (to retrieve data from api and html)
 
 1. Clone this repository
 2. use `npm install` to install dependencies
