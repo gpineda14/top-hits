@@ -16,11 +16,10 @@ const authToken = process.env.AUTH_TOKEN_TWILIO;
 const sender = process.env.SENDER;
 const client = require('twilio')(accountSid, authToken);
 
-app.get('/', function(req, res) {
-  res.send('hello world')
-})
-
-app.post('/submit', function (req, res) {
+// app.get('/', function(req, res) {
+//   res.send('hello world')
+// })
+app.post('/api', function (req, res) {
   let name = req.query.name;
   let phoneNum = req.query.phoneNum;
   let frequency = req.query.frequency;
