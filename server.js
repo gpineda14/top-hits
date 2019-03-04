@@ -3,6 +3,7 @@ const schedule = require('node-schedule');
 const express = require('express');
 const bodyParser = require('body-parser');
 const dataHandler = require('./lib/dataHandler');
+const fetchSpotify = require('./lib/spotify_modded');
 require('dotenv').config();
 
 const app = express();
@@ -19,6 +20,14 @@ const client = require('twilio')(accountSid, authToken);
 // app.get('/', function(req, res) {
 //   res.send('hello world')
 // })
+app.get('/spotify', function (req, res) {
+  fetchSpotify.fetchSpotify().then(body => {
+    res.json(body);
+  }).catch(error => {
+    console.log(error);
+  })
+})
+
 app.post('/api', function (req, res) {
   let name = req.query.name;
   let phoneNum = req.query.phoneNum;
